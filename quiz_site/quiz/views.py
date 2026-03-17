@@ -103,3 +103,6 @@ def result_view(request):
             return redirect(reverse("test"))
     else:
         return redirect(reverse("reg_driver"))
+
+def index(request: HttpRequest):
+    return render("index.html")
