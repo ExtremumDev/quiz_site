@@ -105,4 +105,4 @@ def result_view(request):
         return redirect(reverse("reg_driver"))
 
 def index(request: HttpRequest):
-    return render("index.html")
+    return render(request, "index.html")
