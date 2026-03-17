@@ -6,5 +6,6 @@ urlpatterns = [
     path("slides/<int:slide_number>/", views.slide_view, name="slides"),
     path("register/", views.RegisterDriverView.as_view(), name="reg_driver"),
     path("test/", views.test, name="test"),
-    path("result/", views.result_view, name="result")
+    path("result/", views.result_view, name="result"),
+    path("", views.index, name='main')
 ]
