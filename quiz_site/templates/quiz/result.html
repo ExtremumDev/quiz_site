@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Результаты теста для {{ full_name }}</h2>
+
+<hr>
+
+{% for r in results %}
+<div style="margin-bottom:20px; padding:10px; border:1px solid #ddd; border-radius:5px;">
+    <p><strong>Вопрос:</strong> {{ r.question }}</p>
+    <ul>
+        {% for choice in r.choices %}
+            {% if forloop.counter0 == r.correct_answer %}
+                <li style="color:green;">
+                    {{ choice }} {% if forloop.counter0 == r.user_answer %}(Ваш ответ){% endif %} ✅
+                </li>
+            {% elif forloop.counter0 == r.user_answer %}
+                <li style="color:red;">
+                    {{ choice }} (Ваш ответ) ❌
+                </li>
+            {% else %}
+                <li>{{ choice }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+{% endblock %}

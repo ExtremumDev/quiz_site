@@ -10,6 +10,10 @@ class Driver(models.Model):
     phone_number = models.CharField(verbose_name="Номер телефона", max_length=12)
     position = models.CharField(verbose_name="Должность", max_length=50)
 
+    @property
+    def full_name(self):
+        return f"{self.surname} {self.first_name} {self.first_name}"
+
 
 class Slide(models.Model):
     title = models.CharField(max_length=200, blank=True, default="")

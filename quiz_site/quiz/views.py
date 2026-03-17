@@ -58,17 +58,48 @@ def test(request: HttpRequest):
                     score += 1
 
             TestResult.objects.create(
-                full_name=request.session["name"],
-                score=score,
+                driver=driver,
                 q1=answers[0],
                 q2=answers[1],
                 q3=answers[2],
             )
 
 
-            return redirect(reverse("slides"))
+            return redirect(reverse("result"))
 
 
         return render(request, "quiz/test.html", {"questions": QUESTIONS})
+    else:
+        return redirect(reverse("reg_driver"))
+
+def result_view(request):
+    driver_id = request.session.get("driver_id")
+
+    if driver_id:
+        try:
+            driver = Driver.objects.get(pk=driver_id)
+        except Driver.DoesNotExist:
+            return redirect(reverse("reg_driver"))
+
+        user_result = TestResult.objects.filter(driver=driver).first()
+        if user_result:
+
+            results = []
+            i = 1
+            for q in QUESTIONS:
+                results.append({
+                    "question": q["text"],
+                    "choices": q["options"],
+                    "user_answer": user_result.__dict__.get(f"q{1}"),
+                    "correct_answer": q["correct"]
+                })
+                i += 1
+
+            return render(request, "quiz/result.html", {
+                "full_name": driver.full_name,
+                "results": results
+            })
+        else:
+            return redirect(reverse("test"))
     else:
         return redirect(reverse("reg_driver"))
