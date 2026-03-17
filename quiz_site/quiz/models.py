@@ -12,7 +12,7 @@ class Driver(models.Model):
 
     @property
     def full_name(self):
-        return f"{self.surname} {self.first_name} {self.first_name}"
+        return f"{self.surname} {self.first_name} {self.patronymic}"
 
 
 class Slide(models.Model):

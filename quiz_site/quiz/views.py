@@ -1,4 +1,5 @@
-from django.http import HttpRequest, HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpRequest, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
@@ -6,6 +7,7 @@ from django.views.generic import CreateView
 from .forms import DriverForm
 from .models import Slide, Driver, TestResult
 from .test_config import QUESTIONS
+from .utils import serialize_user_test_result
 
 
 # Create your views here.
@@ -72,7 +74,7 @@ def test(request: HttpRequest):
     else:
         return redirect(reverse("reg_driver"))
 
-def result_view(request):
+def self_result_view(request):
     driver_id = request.session.get("driver_id")
 
     if driver_id:
@@ -84,16 +86,7 @@ def result_view(request):
         user_result = TestResult.objects.filter(driver=driver).first()
         if user_result:
 
-            results = []
-            i = 1
-            for q in QUESTIONS:
-                results.append({
-                    "question": q["text"],
-                    "choices": q["options"],
-                    "user_answer": user_result.__dict__.get(f"q{1}"),
-                    "correct_answer": q["correct"]
-                })
-                i += 1
+            results = serialize_user_test_result(QUESTIONS, user_result)
 
             return render(request, "quiz/result.html", {
                 "full_name": driver.full_name,
@@ -103,6 +96,33 @@ def result_view(request):
             return redirect(reverse("test"))
     else:
         return redirect(reverse("reg_driver"))
+
+@staff_member_required
+def users_result_view(request: HttpRequest):
+    users = Driver.objects.filter(test__isnull=False)
+
+    return render(request, "quiz/driver_reg.html", context={"users": users})
+
+@staff_member_required
+def certain_user_result(request: HttpRequest, user_id: int):
+    user = get_object_or_404(Driver, pk=user_id)
+
+    user_result = TestResult.objects.filter(driver=user).first()
+
+    if user_result:
+        results = serialize_user_test_result(QUESTIONS, user_result)
+
+        return render(
+            request,
+            "quiz/result.html",
+            {
+                "full_name": user.full_name,
+                "results": results
+            }
+        )
+    else:
+        raise Http404("Пользователь не проходил тестирование")
+
 
 def index(request: HttpRequest):
     return render(request, "index.html")
