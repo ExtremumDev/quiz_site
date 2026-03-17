@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">
+{% csrf_token %}
+
+{% for q in questions %}
+<div class="question">
+
+<h2>{{q.number}}. {{ q.text }}</h2>
+
+{% for option in q.options %}
+<label>{{ option }}
+</label>
+<input type="radio" name="q{{ forloop.parentloop.counter0 }}" value="{{ forloop.counter0 }}">
+
+
+<br>
+{% endfor %}
+
+</div>
+{% endfor %}
+
+<button type="submit">Завершить тест</button>
+
+</form>
+{% endblock %}

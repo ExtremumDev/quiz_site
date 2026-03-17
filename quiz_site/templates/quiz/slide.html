@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center">
+<h2>{{ slide.title }}</h2>
+
+<video width="800" controls>
+    <source src="{{ slide.video.url }}" type="video/mp4">
+    Ваш браузер не поддерживает видео
+</video>
+</div>
+<div style="margin-top:20px">
+
+    {% if prev_slide %}
+    <a href="{% url 'slide' prev_slide.order %}">
+    <button>← Назад</button>
+    </a>
+    {% endif %}
+
+    {% if next_slide %}
+    <a href="{% url 'slide' next_slide.order %}">
+        <button>Далее →</button>
+    </a>
+    {% endif %}
+</div>
+{% endblock content %}
