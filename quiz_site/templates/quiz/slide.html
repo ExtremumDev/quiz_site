@@ -12,14 +12,14 @@
 <div style="margin-top:20px">
 
     {% if prev_slide %}
-    <a href="{% url 'slide' prev_slide.order %}">
+    <a href="{% url 'slides' prev_slide.number %}">
     <button>← Назад</button>
     </a>
 
     {% endif %}
 
     {% if next_slide %}
-    <a href="{% url 'slide' next_slide.order %}">
+    <a href="{% url 'slides' next_slide.number %}">
         <button>Далее →</button>
     </a>
     {% else %}
