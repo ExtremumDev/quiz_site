@@ -88,3 +88,10 @@ footer {
 .radio-option span {
     line-height: 1.4;
 }
+
+.radio-text {
+    display: block;
+    line-height: 1.4;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
