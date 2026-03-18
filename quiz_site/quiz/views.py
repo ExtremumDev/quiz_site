@@ -28,6 +28,15 @@ class RegisterDriverView(CreateView):
 
 
 def slide_view(request: HttpRequest, slide_number: int):
+    driver_id = request.session.get("driver_id")
+
+    if driver_id:
+        try:
+            driver = Driver.objects.get(pk=driver_id)
+        except Driver.DoesNotExist:
+            return redirect(reverse("reg_driver"))
+    else:
+            return redirect(reverse("reg_driver"))
     slide = get_object_or_404(Slide, number=slide_number)
 
     prev_slide = Slide.objects.filter(number__lt=slide_number).last()
