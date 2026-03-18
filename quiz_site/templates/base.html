@@ -14,9 +14,11 @@
         <a href="{% url 'main' %}"><img src="{% static 'image/site_logo.png' %}" height="100px"></a>
     </div>
     <nav>
-        {{ driver.full_name }} | <a href="{% url 'logout_driver' %}">Выйти</a>
         <a href="{% url 'slides' 1 %}">Видео-уроки</a>
         <a href="{% url 'test' %}">Тест</a>
+        {% if driver %}
+            {{ driver.full_name }} | <a href="{% url 'logout_driver' %}">Выйти</a>
+        {% endif %}
     </nav>
 </header>
 
