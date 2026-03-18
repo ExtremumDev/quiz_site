@@ -82,7 +82,6 @@ def add_questions():
 
 
         quest = Question(content=q["text"], options=question_options, correct=q["correct"], number=q["number"])
-        c += 1
         try:
             quest.save()
         except:
