@@ -31,7 +31,7 @@ main {
 }
 
 button {
-    background-color: #ffffff;
+    background-color: #1e1e1e;
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -41,7 +41,7 @@ button {
 }
 
 button:hover {
-    background-color: #333333;
+    background-color: #e53935;
 }
 
 input, textarea, select {
