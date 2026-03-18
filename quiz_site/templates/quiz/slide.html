@@ -15,10 +15,15 @@
     <a href="{% url 'slide' prev_slide.order %}">
     <button>← Назад</button>
     </a>
+
     {% endif %}
 
     {% if next_slide %}
     <a href="{% url 'slide' next_slide.order %}">
+        <button>Далее →</button>
+    </a>
+    {% else %}
+    <a href="{% url 'test' %}">
         <button>Далее →</button>
     </a>
     {% endif %}
