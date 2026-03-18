@@ -74,7 +74,7 @@ footer {
 }
 
 .radio-option {
-    display: flex;
+    display: block;
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
