@@ -33,8 +33,9 @@ class Question(models.Model):
     content = models.CharField(verbose_name="Вопрос", max_length=400)
     options = models.JSONField(
         verbose_name="Варианты ответов"
-    ) # {'id': <choice_id>, 'text': <choice_text>}
+    ) # [{'id': <choice_id>, 'text': <choice_text>}]
     correct = models.PositiveIntegerField()
+    number = models.PositiveIntegerField(verbose_name="Номер вопроса", unique=True)
 
 
 class Answer(models.Model):
@@ -43,7 +44,7 @@ class Answer(models.Model):
     selected = models.PositiveIntegerField(verbose_name="Выбранный ответ")
 
 class Meta:
-    ordering = ["question_id"]
+    ordering = ["question__number"]
 
 
 class Attempt(models.Model):

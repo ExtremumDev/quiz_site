@@ -6,14 +6,11 @@
 {% for q in questions %}
 <div class="question">
 
-<h2>{{q.pk}}. {{ q.content }}</h2>
+<h2>{{q.number}}. {{ q.content }}</h2>
 
 {% for option in q.options %}
-<label>{{ option }}
-</label>
+<label>{{ option.text }}</label>
 <input type="radio" name="q_{{ q.pk }}" value="{{ option.id }}">
-
-
 <br>
 {% endfor %}
 

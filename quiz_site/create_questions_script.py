@@ -1,8 +1,12 @@
 import os
 from typing import List, Dict
 
+import django
 
-from .models import TestResult, Question
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "quiz_site.settings")
+django.setup()
+
+from quiz.models import TestResult, Question
 
 QUESTIONS = [
     {
@@ -14,7 +18,7 @@ QUESTIONS = [
             "Незначительные ДТП",
             "Ошибки водителя"
         ],
-        "correct": 3
+        "correct": 4
     },
     {
         "number": 2,
@@ -25,7 +29,7 @@ QUESTIONS = [
             "Вздутие на боковине («грыжа») или глубокий порез до корда.",
             "Отсутствие  колпачков на ниппелях."
         ],
-        "correct": 2
+        "correct": 3
     },
     {
         "number": 3,
@@ -36,23 +40,31 @@ QUESTIONS = [
             "Поле зрения сужается («туннельный эффект»), водитель перестает замечать объекты по бокам и в зеркалах",
             "Никак не влияют, зрение зависит только от физиологии глаза."
         ],
+        "correct": 3
+    },
+    {
+        "number": 4,
+        "text": "В чем заключается суть правила «трех точек опоры» при входе в кабину или выходе из нее?",
+        "options": [
+            "Нужно держаться двумя руками за руль и опираться одной ногой на подножку.",
+            "В любой момент времени с машиной должны контактировать либо две руки и одна нога, либо две ноги и одна рука.",
+            "Нужно использовать три ступеньки лестницы одновременно.",
+            "Водитель должен касаться земли обеими ногами и "
+        ],
+        "correct": 2
+    },
+    {
+        "number": 5,
+        "text": "В какой момент водителю, перевозящему пассажиров, разрешается открывать двери для посадки или высадки пассажиров?",
+        "options": [
+            "Сразу после снижения скорости до 5 км/ч, чтобы ускорить процесс.",
+            "Только после полной остановки транспортного средства.",
+            "Когда пассажиры уже встали со своих мест и подошли к выходу.",
+            "По первому требованию старшего вахты, независимо от места остановки."
+        ],
         "correct": 2
     },
 ]
-
-
-def serialize_user_test_result(questions: List[Dict], user_result: TestResult):
-    results = []
-    i = 1
-    for q in questions:
-        results.append({
-            "question": q["text"],
-            "choices": q["options"],
-            "user_answer": user_result.__dict__.get(f"q{1}"),
-            "correct_answer": q["correct"]
-        })
-        i += 1
-    return results
 
 def add_questions():
 
@@ -69,8 +81,12 @@ def add_questions():
             )
 
 
-        quest = Question(content=q["text"], options=question_options, correct=q["correct"])
-        quest.save()
+        quest = Question(content=q["text"], options=question_options, correct=q["correct"], number=q["number"])
+        c += 1
+        try:
+            quest.save()
+        except:
+            continue
 
 if __name__ == "__main__":
     add_questions()
