@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Результаты пользователей</h1>
-{% for u in users %}
-    <p><a href="{% url 'result' u.pk %}">{{ u.full_name }}</a> </p>
-{% endfor %}
+<h1>Введите свои данные</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+
 {% endblock content %}

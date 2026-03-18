@@ -4,8 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import DriverForm
-from .models import Slide, Driver, TestResult
+from .forms import DriverForm, TestForm
+from .models import Slide, Driver, TestResult, Attempt, Question
 from .test_config import QUESTIONS
 from .utils import serialize_user_test_result
 
@@ -49,28 +49,14 @@ def test(request: HttpRequest):
             return redirect(reverse("reg_driver"))
         if request.method == "POST":
 
-            answers = []
-            score = 0
-
-            for i, q in enumerate(QUESTIONS):
-                answer = int(request.POST.get(f"q{i}"))
-                answers.append(answer)
-
-                if answer == q["correct"]:
-                    score += 1
-
-            TestResult.objects.create(
-                driver=driver,
-                q1=answers[0],
-                q2=answers[1],
-                q3=answers[2],
-            )
-
+            test_result = TestForm(data=request.POST)
+            test_result.create_attempt(driver=driver)
+            test_result.save_attempt()
 
             return redirect(reverse("result"))
 
 
-        return render(request, "quiz/test.html", {"questions": QUESTIONS})
+        return render(request, "quiz/test.html", {"questions": Question.objects.all()})
     else:
         return redirect(reverse("reg_driver"))
 
@@ -83,15 +69,17 @@ def self_result_view(request):
         except Driver.DoesNotExist:
             return redirect(reverse("reg_driver"))
 
-        user_result = TestResult.objects.filter(driver=driver).first()
+        user_result = Attempt.objects.filter(driver=driver).first()
         if user_result:
 
-            results = serialize_user_test_result(QUESTIONS, user_result)
-
-            return render(request, "quiz/result.html", {
-                "full_name": driver.full_name,
-                "results": results
-            })
+            return render(
+                request,
+                "quiz/result.html",
+                {
+                    "full_name": driver.full_name,
+                    "answers": user_result.answers
+                }
+            )
         else:
             return redirect(reverse("test"))
     else:
@@ -99,7 +87,7 @@ def self_result_view(request):
 
 @staff_member_required
 def users_result_view(request: HttpRequest):
-    users = Driver.objects.filter(test__isnull=False)
+    users = Driver.objects.filter(attempt__isnull=False)
 
     return render(request, "quiz/driver_reg.html", context={"users": users})
 
@@ -107,17 +95,16 @@ def users_result_view(request: HttpRequest):
 def certain_user_result(request: HttpRequest, user_id: int):
     user = get_object_or_404(Driver, pk=user_id)
 
-    user_result = TestResult.objects.filter(driver=user).first()
+    user_result = Attempt.objects.filter(driver=user).first()
 
     if user_result:
-        results = serialize_user_test_result(QUESTIONS, user_result)
 
         return render(
             request,
             "quiz/result.html",
             {
                 "full_name": user.full_name,
-                "results": results
+                "answers": user_result.answers
             }
         )
     else:
@@ -126,3 +113,9 @@ def certain_user_result(request: HttpRequest, user_id: int):
 
 def index(request: HttpRequest):
     return render(request, "index.html")
+
+
+def logout_view(request: HttpRequest):
+    request.session.pop("driver_id")
+
+    return redirect(reverse("reg_driver"))

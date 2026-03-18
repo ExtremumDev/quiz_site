@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
@@ -29,11 +28,31 @@ class Slide(models.Model):
         verbose_name = "Слайд"
         verbose_name_plural = "Слайды"
 
-class TestResult(models.Model):
-    driver = models.OneToOneField("Driver", on_delete=models.CASCADE, related_name="test")
 
+class Question(models.Model):
+    content = models.CharField(verbose_name="Вопрос", max_length=400)
+    options = models.JSONField(
+        verbose_name="Варианты ответов"
+    ) # {'id': <choice_id>, 'text': <choice_text>}
+    correct = models.PositiveIntegerField()
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(to="Question", on_delete=models.CASCADE, related_name="answers")
+    attempt = models.ForeignKey(to="Attempt", on_delete=models.CASCADE, related_name="answers")
+    selected = models.PositiveIntegerField(verbose_name="Выбранный ответ")
+
+class Meta:
+    ordering = ["question_id"]
+
+
+class Attempt(models.Model):
+    driver = models.ForeignKey(to="Driver", on_delete=models.SET_NULL, related_name="attempts", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class TestResult(models.Model):
+    driver = models.OneToOneField("Driver", on_delete=models.CASCADE, related_name="test")
     q1 = models.IntegerField()
     q2 = models.IntegerField()
     q3 = models.IntegerField()

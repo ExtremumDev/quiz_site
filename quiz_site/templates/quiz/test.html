@@ -6,12 +6,12 @@
 {% for q in questions %}
 <div class="question">
 
-<h2>{{q.number}}. {{ q.text }}</h2>
+<h2>{{q.pk}}. {{ q.content }}</h2>
 
 {% for option in q.options %}
 <label>{{ option }}
 </label>
-<input type="radio" name="q{{ forloop.parentloop.counter0 }}" value="{{ forloop.counter0 }}">
+<input type="radio" name="q_{{ q.pk }}" value="{{ option.id }}">
 
 
 <br>

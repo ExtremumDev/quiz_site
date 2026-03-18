@@ -5,21 +5,21 @@
 
 <hr>
 
-{% for r in results %}
+{% for a in answers %}
 <div style="margin-bottom:20px; padding:10px; border:1px solid #ddd; border-radius:5px;">
-    <p><strong>Вопрос:</strong> {{ r.question }}</p>
+    <p><strong>Вопрос:</strong> {{ a.question.content }}</p>
     <ul>
-        {% for choice in r.choices %}
-            {% if forloop.counter0 == r.correct_answer %}
+        {% for option in a.question.options %}
+            {% if option.id == a.question.correct %}
                 <li style="color:green;">
-                    {{ choice }} {% if forloop.counter0 == r.user_answer %}(Ваш ответ){% endif %} ✅
+                    {{ option.text }} {% if option.id == a.selected %}(Ваш ответ){% endif %} ✅
                 </li>
-            {% elif forloop.counter0 == r.user_answer %}
+            {% elif option.id == a.selected %}
                 <li style="color:red;">
-                    {{ choice }} (Ваш ответ) ❌
+                    {{ option }} (Ваш ответ) ❌
                 </li>
             {% else %}
-                <li>{{ choice }}</li>
+                <li>{{ option }}</li>
             {% endif %}
         {% endfor %}
     </ul>
