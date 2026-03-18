@@ -101,7 +101,7 @@ def users_result_view(request: HttpRequest):
 
     users = Driver.objects.filter(id__in=driver_ids)
 
-    return render(request, "quiz/users_results.html", context={"users": users})
+    return render(request, "quiz/users_result.html", context={"users": users})
 
 @staff_member_required
 def certain_user_result(request: HttpRequest, user_id: int):
