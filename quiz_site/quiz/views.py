@@ -97,7 +97,9 @@ def self_result_view(request):
 
 @staff_member_required
 def users_result_view(request: HttpRequest):
-    users = Driver.objects.filter(attempt__isnull=False)
+    driver_ids = Attempt.objects.values_list('driver', flat=True).distinct()
+
+    users = Driver.objects.filter(id__in=driver_ids)
 
     return render(request, "quiz/driver_reg.html", context={"users": users})
 
