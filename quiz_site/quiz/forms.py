@@ -22,23 +22,23 @@ class TestForm:
     def create_attempt(self, driver: Driver):
         self.test_attempt = Attempt(driver=driver)
         self.test_attempt.save()
+        print(self.data)
 
         for k, v in self.data.items():
             question_info = k.split('_') # votes n POST: {'q_1': '<answer1>', 'q_2': '<answer2>', ...}
 
-            if len(question_info) == 2:
+            if len(question_info) == 2 and question_info[0] == "q":
                 try:
-                    question_id = int(question_info[0])
+                    question_id = int(question_info[1])
 
-                    answer_id = int(question_info[0])
+                    if v:
+                        answer_id = int(v[0])
 
-                    self.answers.append(Answer(selected=answer_id, question_id=question_id, attempt=self.test_attempt))
+                        self.answers.append(Answer(selected=answer_id, question_id=question_id, attempt=self.test_attempt))
                 except ValueError:
                     continue
 
     def save_attempt(self):
-        try:
-            Answer.objects.add(*self.answers)
-        except Exception:
-            self.test_attempt.delete()
+        [a.save() for a in self.answers]
+        self.test_attempt.save()
 

@@ -16,10 +16,10 @@
                 </li>
             {% elif option.id == a.selected %}
                 <li style="color:red;">
-                    {{ option }} (Ваш ответ) ❌
+                    {{ option.text }} (Ваш ответ) ❌
                 </li>
             {% else %}
-                <li>{{ option }}</li>
+                <li>{{ option.text }}</li>
             {% endif %}
         {% endfor %}
     </ul>

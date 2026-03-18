@@ -43,8 +43,8 @@ class Answer(models.Model):
     attempt = models.ForeignKey(to="Attempt", on_delete=models.CASCADE, related_name="answers")
     selected = models.PositiveIntegerField(verbose_name="Выбранный ответ")
 
-class Meta:
-    ordering = ["question__number"]
+    class Meta:
+        ordering = ["question__number"]
 
 
 class Attempt(models.Model):

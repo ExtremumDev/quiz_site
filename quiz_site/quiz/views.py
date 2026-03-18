@@ -5,7 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
 from .forms import DriverForm, TestForm
-from .models import Slide, Driver, TestResult, Attempt, Question
+from .models import Slide, Driver, TestResult, Attempt, Question, Answer
 from .test_config import QUESTIONS
 from .utils import serialize_user_test_result
 
@@ -62,7 +62,7 @@ def test(request: HttpRequest):
             test_result.create_attempt(driver=driver)
             test_result.save_attempt()
 
-            return redirect(reverse("result"))
+            return redirect(reverse("user_result"))
 
 
         return render(request, "quiz/test.html", {"questions": Question.objects.all()})
@@ -78,7 +78,8 @@ def self_result_view(request):
         except Driver.DoesNotExist:
             return redirect(reverse("reg_driver"))
 
-        user_result = Attempt.objects.filter(driver=driver).first()
+        user_result = Attempt.objects.filter(driver=driver).last()
+
         if user_result:
 
             return render(
@@ -86,7 +87,7 @@ def self_result_view(request):
                 "quiz/result.html",
                 {
                     "full_name": driver.full_name,
-                    "answers": user_result.answers
+                    "answers": user_result.answers.all()
                 }
             )
         else:
@@ -113,7 +114,7 @@ def certain_user_result(request: HttpRequest, user_id: int):
             "quiz/result.html",
             {
                 "full_name": user.full_name,
-                "answers": user_result.answers
+                "answers": user_result.answers.all()
             }
         )
     else:
