@@ -9,8 +9,9 @@
 <h2>{{q.number}}. {{ q.content }}</h2>
 
 {% for option in q.options %}
-<label class="radio-option">{{ option.text }}
+<label class="radio-option">
     <input type="radio" name="q_{{ q.pk }}" value="{{ option.id }}">
+    <span>{{ option.text }}</span>
 </label>
 <br>
 {% endfor %}
