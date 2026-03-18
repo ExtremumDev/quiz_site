@@ -35,7 +35,7 @@ class Question(models.Model):
         verbose_name="Варианты ответов"
     ) # [{'id': <choice_id>, 'text': <choice_text>}]
     correct = models.PositiveIntegerField()
-    number = models.PositiveIntegerField(verbose_name="Номер вопроса", unique=True)
+    number = models.PositiveIntegerField(verbose_name="Номер вопроса", unique=True, null=True)
 
 
 class Answer(models.Model):
