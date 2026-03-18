@@ -17,7 +17,7 @@
         <a href="{% url 'slides' 1 %}">Видео-уроки</a>
         <a href="{% url 'test' %}">Тест</a>
         {% if driver %}
-            {{ driver.full_name }} | <a href="{% url 'logout_driver' %}">Выйти</a>
+        <span>{{ driver.full_name }}</span> | <a href="{% url 'logout_driver' %}">Выйти</a>
         {% endif %}
     </nav>
 </header>
